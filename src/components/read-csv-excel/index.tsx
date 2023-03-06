@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import MaterialTable from 'material-table'
+import MaterialTable from 'material-table';
+
+// import IconButton from '@mui/material/IconButton';
+// import PhotoCamera from '@mui/icons-material/PhotoCamera';
+// import Stack from '@mui/material/Stack';
 import XLSX from 'xlsx'
+import { Button, IconButton } from '@material-ui/core';
+import { PhotoCamera } from '@material-ui/icons';
 
 const EXTENSIONS = ['xlsx', 'xls', 'csv']
 function ExcelReader() {
@@ -10,7 +16,7 @@ function ExcelReader() {
   const getExention = (file: any) => {
     const parts = file.name.split('.')
     const extension = parts[parts.length - 1]
-    return EXTENSIONS.includes(extension) // return boolean
+    return EXTENSIONS.includes(extension)
   }
 
   const convertToJson = (headers: any, data: any) => {
@@ -31,22 +37,19 @@ function ExcelReader() {
 
     const reader = new FileReader()
     reader.onload = (event: any) => {
-      //parse data
 
       const bstr = event.target.result
       const workBook = XLSX.read(bstr, { type: "binary" })
 
-      //get first sheet
       const workSheetName = workBook.SheetNames[0]
       const workSheet = workBook.Sheets[workSheetName]
-      //convert to array
+
       const fileData = XLSX.utils.sheet_to_json(workSheet, { header: 1 })
-      // console.log(fileData)
+
       const headers: any = fileData[0]
       const heads = headers.map((head: any) => ({ title: head, field: head }))
       setColDefs(heads)
 
-      //removing header
       fileData.splice(0, 1)
 
 
@@ -70,9 +73,19 @@ function ExcelReader() {
     <div className="App">
       <h1>React-App</h1>
       <h4>Import Data from Excel, CSV in Table</h4>
-      <input type="file" onChange={importExcel} />
-      <div style={{width: "80%"}}>
-        <MaterialTable title=" Data" data={data} columns={colDefs} />
+      {/* <input type="file" onChange={importExcel} /> */}
+
+      <Button variant="contained" component="label">
+        Upload
+        <input hidden  multiple type="file" onChange={importExcel}/>
+      </Button>
+      <IconButton color="primary" aria-label="upload picture" component="label">
+        <input hidden  type="file" onChange={importExcel}/>
+        <PhotoCamera />
+      </IconButton>
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <MaterialTable style={{ width: "80%" }} title=" Data" data={data} columns={colDefs} />
       </div>
     </div>
   );
