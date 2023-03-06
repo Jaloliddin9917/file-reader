@@ -85,6 +85,7 @@ function ExcelReader() {
       </IconButton>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
+        
         <MaterialTable style={{ width: "80%" }} title=" Data" data={data} columns={colDefs} />
       </div>
     </div>
